@@ -1,4 +1,4 @@
-import 'package:campus_crush_app/services/logger_service.dart';
+import 'package:campus_crush_app/app/services/logger_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:typesense/typesense.dart';
 
