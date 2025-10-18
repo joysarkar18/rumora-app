@@ -41,7 +41,7 @@ class OnboardingView extends GetView<OnboardingController> {
                               children: [
                                 Text(
                                   controller.onboardingData[index]['title']!,
-                                  style: AppTextStyles.style20w900(
+                                  style: AppTextStyles.style22w900(
                                     color: AppColors.grayBlue,
                                   ),
                                   textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class OnboardingView extends GetView<OnboardingController> {
                                 Text(
                                   controller.onboardingData[index]['subtitle']!,
                                   textAlign: TextAlign.center,
-                                  style: AppTextStyles.style14w500(
+                                  style: AppTextStyles.style15w500(
                                     color: AppColors.grayMedium,
                                   ),
                                 ),

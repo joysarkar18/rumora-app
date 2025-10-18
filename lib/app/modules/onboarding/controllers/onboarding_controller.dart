@@ -10,19 +10,29 @@ class OnboardingController extends GetxController {
 
   final List<Map<String, String>> onboardingData = [
     {
-      'title': 'Match maker for tea lover',
+      'title': '☕ Spill the Tea',
       'subtitle':
-          'Something happens here, not like regular app, this is different, lorem ipsum',
+          'Anonymous confessions, juicy campus gossip, and unfiltered takes on your dating disasters 👀',
     },
     {
-      'title': 'Connect with Your Campus',
+      'title': '💬 Roast or Be Roasted',
       'subtitle':
-          'Find your perfect match within your university community and share memorable moments',
+          'Share your worst date stories and get hilariously honest feedback from your campus crew 😂',
     },
     {
-      'title': 'Start Your Love Story',
+      'title': '🎭 The Anonymous Truth',
       'subtitle':
-          'Begin meaningful conversations and create lasting connections with verified students',
+          'No filters, no shame, just real talk about crushes, exes, and awkward encounters 🤐',
+    },
+    {
+      'title': '⚡ Campus Drama Central',
+      'subtitle':
+          'Where everyone\'s secrets come to play—find your people and laugh at the chaos together 🍿',
+    },
+    {
+      'title': '💘 Match Madness',
+      'subtitle':
+          'Gossip, confess—connect with locals who get your vibe and your messy love life 😅',
     },
   ];
 

@@ -42,6 +42,8 @@ dependencies:
   flutter_svg: ^2.2.1
   responsive_sizer: ^3.3.1
   otpless_flutter: ^2.2.5
+  otpless_headless_flutter: ^1.0.4
+  pinput: ^5.0.2
 
 dev_dependencies:
   flutter_test:
