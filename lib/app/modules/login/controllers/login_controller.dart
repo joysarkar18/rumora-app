@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:campus_crush_app/app/routes/app_pages.dart';
 import 'package:campus_crush_app/app/services/logger_service.dart';
 import 'package:get/get.dart';
 import 'package:otpless_headless_flutter/otpless_flutter.dart';
@@ -366,6 +367,8 @@ class LoginController extends GetxController {
         "phone": phoneNumber.value,
         "countryCode": "+91",
       };
+
+      Get.toNamed(Routes.VERIFIED);
 
       LoggerService.logInfo("Verifying OTP: $verificationRequest");
       _otplessHeadlessPlugin.start(onOtplessResponse, verificationRequest);

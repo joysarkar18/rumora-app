@@ -215,12 +215,16 @@ class LoginView extends GetView<LoginController> {
               controller.goBackToPhoneInput();
             },
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.primary.withOpacity(0.1),
               ),
-              child: Icon(Icons.arrow_back, color: AppColors.primary, size: 24),
+              child: Icon(
+                Icons.keyboard_arrow_left_rounded,
+                color: AppColors.primary,
+                size: 30,
+              ),
             ),
           ),
 

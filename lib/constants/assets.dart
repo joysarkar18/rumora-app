@@ -2,6 +2,10 @@
 class Assets {
   Assets._();
   
+  /// Assets for animationsComplete
+  /// assets/animations/complete.json
+  static const String animationsComplete = "assets/animations/complete.json";
+
   /// Assets for iconsOnboardingTopImage
   /// assets/icons/onboarding_top_image.svg
   static const String iconsOnboardingTopImage = "assets/icons/onboarding_top_image.svg";
