@@ -1,3 +1,4 @@
+import 'package:campus_crush_app/app/services/login_manager.dart';
 import 'package:campus_crush_app/app/services/typesence_service.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/firebase_options.dart';
@@ -12,7 +13,8 @@ import 'app/routes/app_pages.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await TypeSenseInstance().initialize();
+  Get.put(LoginManager());
+  // await TypeSenseInstance().initialize();
 
   runApp(
     ResponsiveSizer(
@@ -24,7 +26,9 @@ void main() async {
             scaffoldBackgroundColor: AppColors.cream,
             primaryColor: AppColors.primary,
           ),
-          initialRoute: AppPages.initial,
+          initialRoute: LoginManager.instance.isLoggedIn.value
+              ? Routes.COLLEGE
+              : AppPages.initial,
           getPages: AppPages.routes,
         );
       },

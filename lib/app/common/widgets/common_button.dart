@@ -136,6 +136,7 @@ class _CommonButtonState extends State<CommonButton>
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    // Button is enabled only if: enabled property is true AND not loading AND onPressed is not null
     final bool isEnabled =
         widget.enabled && !widget.isLoading && widget.onPressed != null;
 

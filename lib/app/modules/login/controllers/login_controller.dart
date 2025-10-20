@@ -1,15 +1,25 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:campus_crush_app/app/routes/app_pages.dart';
 import 'package:campus_crush_app/app/services/logger_service.dart';
+import 'package:campus_crush_app/app/services/login_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:otpless_headless_flutter/otpless_flutter.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginController extends GetxController {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final LoginManager _loginManager = LoginManager.instance;
+  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
+  final Connectivity _connectivity = Connectivity();
+
   RxString phoneNumber = ''.obs;
   RxBool agreeToTerms = false.obs;
   bool get isValidPhoneNumber => phoneNumber.value.length == 10;
-  final _otplessHeadlessPlugin = Otpless();
+
   RxBool isOtpSent = false.obs;
   RxString otp = ''.obs;
   RxBool isVerifyingOtp = false.obs;
@@ -19,302 +29,18 @@ class LoginController extends GetxController {
   RxInt resendCooldown = 0.obs;
   RxBool canResendOtp = true.obs;
 
+  late String _verificationId;
+  Timer? _resendTimer;
+
   @override
-  void onInit() {
-    super.onInit();
-    _otplessHeadlessPlugin.initialize("53F1MC6XNHYQIAJG3TAL");
-    _otplessHeadlessPlugin.setResponseCallback(onOtplessResponse);
-  }
-
-  void onOtplessResponse(dynamic result) {
-    _otplessHeadlessPlugin.commitResponse(result);
-
-    final responseType = result['responseType'];
-
-    switch (responseType) {
-      case "SDK_READY":
-        LoggerService.logInfo("SDK is ready");
-        break;
-
-      case "FAILED":
-        LoggerService.logInfo("SDK initialization failed");
-        _showError("SDK initialization failed");
-        break;
-
-      case "INITIATE":
-        if (result["statusCode"] == 200) {
-          LoggerService.logInfo("Headless authentication initiated");
-          final authType = result["response"]["authType"];
-          if (authType == "OTP") {
-            isOtpSent.value = true;
-            _showError(""); // Clear previous errors
-            LoggerService.logInfo("OTP sent successfully");
-          } else if (authType == "SILENT_AUTH") {
-            LoggerService.logInfo("Silent auth initiated");
-          }
-        } else {
-          if (Platform.isAndroid) {
-            handleInitiateErrorAndroid(result["response"]);
-          } else if (Platform.isIOS) {
-            handleInitiateErrorIOS(result["response"]);
-          }
-        }
-        break;
-
-      case "OTP_AUTO_READ":
-        final otpValue = result["response"]["otp"];
-        LoggerService.logInfo("OTP Auto-Read: $otpValue");
-        otp.value = otpValue;
-        // Auto-verify when OTP is auto-read
-        Future.delayed(const Duration(milliseconds: 500), () {
-          verifyOTP();
-        });
-        break;
-
-      case "VERIFY":
-        isVerifyingOtp.value = false;
-        final authType = result["response"]["authType"];
-        if (result["statusCode"] == 200) {
-          LoggerService.logInfo("OTP verified successfully");
-          _showError(""); // Clear errors
-          // Get the token or user data from response
-          final token = result["response"]["token"];
-          _handleVerificationSuccess(token);
-        } else {
-          if (authType == "SILENT_AUTH") {
-            if (result["statusCode"] == 9106) {
-              _showError("Authentication failed. Please try again.");
-            } else {
-              _showError("Silent authentication failed. Please try again.");
-            }
-          } else {
-            if (Platform.isAndroid) {
-              handleVerifyErrorAndroid(result["response"]);
-            } else if (Platform.isIOS) {
-              handleVerifyErrorIOS(result["response"]);
-            }
-          }
-        }
-        break;
-
-      case "DELIVERY_STATUS":
-        final authType = result["response"]["authType"];
-        final deliveryChannel = result["response"]["deliveryChannel"];
-        LoggerService.logInfo(
-          "OTP delivery status - AuthType: $authType, Channel: $deliveryChannel",
-        );
-        break;
-
-      case "ONETAP":
-        final token = result["response"]["token"];
-        if (token != null) {
-          LoggerService.logInfo("OneTap Data: $token");
-          _handleVerificationSuccess(token);
-        }
-        break;
-
-      case "FALLBACK_TRIGGERED":
-        final newDeliveryChannel = result["response"]["deliveryChannel"];
-        LoggerService.logInfo("Fallback triggered to: $newDeliveryChannel");
-        _showError(""); // Clear errors as fallback is handling it
-        break;
-
-      default:
-        LoggerService.logInfo("Unknown response type: $responseType");
-        break;
-    }
-  }
-
-  void handleInitiateErrorAndroid(dynamic response) {
-    final String? errorCode = response?['errorCode'];
-    final String? errorMessage = response?['errorMessage'];
-
-    if (errorCode == null) {
-      _showError("An unknown error occurred");
-      return;
-    }
-
-    String userFriendlyMessage = "An error occurred";
-
-    switch (errorCode) {
-      case "7101":
-        userFriendlyMessage = "Invalid phone number format";
-        break;
-      case "7102":
-        userFriendlyMessage = "Invalid phone number";
-        break;
-      case "7103":
-        userFriendlyMessage = "SMS delivery not available";
-        break;
-      case "7106":
-        userFriendlyMessage = "Invalid phone number";
-        break;
-      case "7025":
-      case "401":
-        userFriendlyMessage = "Service not available for your region";
-        break;
-      case "7020":
-      case "7022":
-      case "7023":
-      case "7024":
-        userFriendlyMessage = "Too many requests. Please try again later";
-        break;
-      case "9100":
-      case "9104":
-      case "9103":
-        userFriendlyMessage =
-            "Network error. Please check your internet connection";
-        break;
-      default:
-        userFriendlyMessage = errorMessage ?? "Failed to send OTP";
-    }
-
-    LoggerService.logInfo("OTPless Error: $errorCode - $errorMessage");
-    _showError(userFriendlyMessage);
-  }
-
-  void handleVerifyErrorAndroid(dynamic response) {
-    final String? errorCode = response?['errorCode'];
-    final String? errorMessage = response?['errorMessage'];
-
-    if (errorCode == null) {
-      _showError("Verification failed");
-      return;
-    }
-
-    String userFriendlyMessage = "Verification failed";
-
-    switch (errorCode) {
-      case "7112":
-        userFriendlyMessage = "Please enter the OTP";
-        break;
-      case "7118":
-        userFriendlyMessage = "Incorrect OTP. Please try again";
-        break;
-      case "7303":
-        userFriendlyMessage = "OTP expired. Please request a new one";
-        break;
-      case "9100":
-      case "9104":
-      case "9103":
-        userFriendlyMessage =
-            "Network error. Please check your internet connection";
-        break;
-      default:
-        userFriendlyMessage = errorMessage ?? "Verification failed";
-    }
-
-    LoggerService.logInfo("OTPless Verify Error: $errorCode - $errorMessage");
-    _showError(userFriendlyMessage);
-  }
-
-  void handleInitiateErrorIOS(dynamic response) {
-    final String? errorCode = response?['errorCode'];
-    final String? errorMessage = response?['errorMessage'];
-
-    if (errorCode == null) {
-      _showError("An unknown error occurred");
-      return;
-    }
-
-    String userFriendlyMessage = "An error occurred";
-
-    switch (errorCode) {
-      case "7101":
-        userFriendlyMessage = "Invalid phone number format";
-        break;
-      case "7102":
-        userFriendlyMessage = "Invalid phone number";
-        break;
-      case "7103":
-        userFriendlyMessage = "SMS delivery not available";
-        break;
-      case "7106":
-        userFriendlyMessage = "Invalid phone number";
-        break;
-      case "5900":
-        userFriendlyMessage = "Feature requires a newer iOS version";
-        break;
-      case "7025":
-      case "401":
-        userFriendlyMessage = "Service not available for your region";
-        break;
-      case "7020":
-      case "7022":
-      case "7023":
-      case "7024":
-        userFriendlyMessage = "Too many requests. Please try again later";
-        break;
-      case "9110":
-        userFriendlyMessage = "Request cancelled";
-        break;
-      case "9100":
-      case "9101":
-      case "9102":
-      case "9103":
-      case "9104":
-      case "9105":
-        userFriendlyMessage =
-            "Network error. Please check your internet connection";
-        break;
-      default:
-        userFriendlyMessage = errorMessage ?? "Failed to send OTP";
-    }
-
-    LoggerService.logInfo("OTPless Error: $errorCode - $errorMessage");
-    _showError(userFriendlyMessage);
-  }
-
-  void handleVerifyErrorIOS(dynamic response) {
-    final String? errorCode = response?['errorCode'];
-    final String? errorMessage = response?['errorMessage'];
-
-    if (errorCode == null) {
-      _showError("Verification failed");
-      return;
-    }
-
-    String userFriendlyMessage = "Verification failed";
-
-    switch (errorCode) {
-      case "7112":
-        userFriendlyMessage = "Please enter the OTP";
-        break;
-      case "7118":
-        userFriendlyMessage = "Incorrect OTP. Please try again";
-        break;
-      case "7303":
-        userFriendlyMessage = "OTP expired. Please request a new one";
-        break;
-      case "9110":
-        userFriendlyMessage = "Request cancelled";
-        break;
-      case "9100":
-      case "9101":
-      case "9102":
-      case "9103":
-      case "9104":
-      case "9105":
-        userFriendlyMessage =
-            "Network error. Please check your internet connection";
-        break;
-      default:
-        userFriendlyMessage = errorMessage ?? "Verification failed";
-    }
-
-    LoggerService.logInfo("OTPless Verify Error: $errorCode - $errorMessage");
-    _showError(userFriendlyMessage);
+  void onClose() {
+    _resendTimer?.cancel();
+    super.onClose();
   }
 
   void _showError(String message) {
     errorMessage.value = message;
     showError.value = message.isNotEmpty;
-  }
-
-  void _handleVerificationSuccess(dynamic token) {
-    LoggerService.logInfo("Verification successful. Token: $token");
-    // Navigate to home or next screen
-    // Get.offAllNamed('/home');
   }
 
   void sendOTP() async {
@@ -323,28 +49,26 @@ class LoginController extends GetxController {
       return;
     }
 
+    if (!agreeToTerms.value) {
+      _showError("Please agree to Terms & Conditions and Privacy Policy");
+      return;
+    }
+
     isSendingOtp.value = true;
-    _showError(""); // Clear previous errors
+    _showError("");
 
     try {
-      final bool isSdkReady = await _otplessHeadlessPlugin.isSdkReady();
+      String fullPhoneNumber = "+91${phoneNumber.value}";
+      LoggerService.logInfo('Sending OTP to: $fullPhoneNumber');
 
-      if (isSdkReady) {
-        String fullPhoneNumber = phoneNumber.value; // Without country code
-        LoggerService.logInfo('Sending OTP to: +91$fullPhoneNumber');
-
-        final Map<String, dynamic> args = {
-          "phone": fullPhoneNumber,
-          "countryCode": "+91",
-        };
-
-        _otplessHeadlessPlugin.start(onOtplessResponse, args);
-        _startResendCooldown();
-      } else {
-        isSendingOtp.value = false;
-        LoggerService.logInfo("SDK not ready for OTP initiation");
-        _showError("Service not ready. Please try again.");
-      }
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: fullPhoneNumber,
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: _handleVerificationCompleted,
+        verificationFailed: _handleVerificationFailed,
+        codeSent: _handleCodeSent,
+        codeAutoRetrievalTimeout: _handleCodeAutoRetrievalTimeout,
+      );
     } catch (e) {
       isSendingOtp.value = false;
       LoggerService.logInfo("Error sending OTP: $e");
@@ -352,42 +76,203 @@ class LoginController extends GetxController {
     }
   }
 
+  void _handleVerificationCompleted(PhoneAuthCredential credential) async {
+    LoggerService.logInfo("Verification completed automatically");
+    await _signInWithCredential(credential);
+  }
+
+  void _handleVerificationFailed(FirebaseAuthException e) {
+    isSendingOtp.value = false;
+    LoggerService.logInfo("Verification failed: ${e.message}");
+
+    String userFriendlyMessage = "Verification failed";
+
+    switch (e.code) {
+      case 'invalid-phone-number':
+        userFriendlyMessage = "Invalid phone number format";
+        break;
+      case 'too-many-requests':
+        userFriendlyMessage = "Too many requests. Please try again later";
+        break;
+      case 'network-request-failed':
+        userFriendlyMessage =
+            "Network error. Please check your internet connection";
+        break;
+      case 'app-not-authorized':
+        userFriendlyMessage = "App not authorized for this operation";
+        break;
+      default:
+        userFriendlyMessage = e.message ?? "Verification failed";
+    }
+
+    _showError(userFriendlyMessage);
+  }
+
+  void _handleCodeSent(String verificationId, int? resendToken) {
+    LoggerService.logInfo("OTP sent successfully");
+    _verificationId = verificationId;
+    isOtpSent.value = true;
+    isSendingOtp.value = false;
+    _showError("");
+    _startResendCooldown();
+  }
+
+  void _handleCodeAutoRetrievalTimeout(String verificationId) {
+    LoggerService.logInfo("Code auto-retrieval timeout");
+    _verificationId = verificationId;
+  }
+
   void verifyOTP() async {
-    if (otp.value.length != 4) {
+    if (otp.value.length != 6) {
       _showError("Please enter a valid 6-digit OTP");
       return;
     }
 
     isVerifyingOtp.value = true;
-    _showError(""); // Clear previous errors
+    _showError("");
 
     try {
-      final Map<String, dynamic> verificationRequest = {
-        "otp": otp.value,
-        "phone": phoneNumber.value,
-        "countryCode": "+91",
-      };
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: otp.value,
+      );
 
-      Get.toNamed(Routes.VERIFIED);
-
-      LoggerService.logInfo("Verifying OTP: $verificationRequest");
-      _otplessHeadlessPlugin.start(onOtplessResponse, verificationRequest);
+      await _signInWithCredential(credential);
     } catch (e) {
       isVerifyingOtp.value = false;
       LoggerService.logInfo("Error verifying OTP: $e");
-      _showError("Failed to verify OTP. Please try again.");
+
+      if (e is FirebaseAuthException) {
+        if (e.code == 'invalid-verification-code') {
+          _showError("Incorrect OTP. Please try again");
+        } else {
+          _showError(e.message ?? "Verification failed");
+        }
+      } else {
+        _showError("Failed to verify OTP. Please try again.");
+      }
     }
+  }
+
+  Future<void> _signInWithCredential(PhoneAuthCredential credential) async {
+    try {
+      final UserCredential userCredential = await _firebaseAuth
+          .signInWithCredential(credential);
+
+      // Update LoginManager with user data
+      if (userCredential.user != null) {
+        _loginManager.updateUserOnLogin(userCredential.user!);
+
+        LoggerService.logInfo("User signed in successfully");
+        await checkAndWriteInitialData();
+        isVerifyingOtp.value = false;
+
+        // Navigate to home or next screen
+        Get.offAllNamed(Routes.VERIFIED);
+      }
+    } catch (e) {
+      isVerifyingOtp.value = false;
+      LoggerService.logInfo("Sign in error: $e");
+      _showError("Failed to sign in. Please try again.");
+    }
+  }
+
+  Future<void> checkAndWriteInitialData() async {
+    final data = await FirebaseFirestore.instance
+        .collection("auth")
+        .doc(LoginManager.instance.userId.value)
+        .get();
+
+    final DateTime now = DateTime.now();
+    final Map<String, dynamic> deviceInfo = await getDeviceInfo();
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    if (data.exists) {
+      // User exists - update necessary fields
+      await FirebaseFirestore.instance
+          .collection("auth")
+          .doc(LoginManager.instance.currentUserId)
+          .update({"deviceInfo": deviceInfo, "updatedAt": now});
+
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(LoginManager.instance.currentUserId)
+          .update({
+            "version": packageInfo.version,
+            "buildNumber": packageInfo.buildNumber,
+            "platform": Platform.isAndroid ? "android" : "ios",
+            "updatedAt": now,
+          });
+    } else {
+      await FirebaseFirestore.instance
+          .collection("auth")
+          .doc(LoginManager.instance.currentUserId)
+          .set({
+            "phoneNo": LoginManager.instance.currentPhoneNumber,
+            "userId": LoginManager.instance.currentUserId,
+            "createdAt": now,
+            "updatedAt": now,
+            "deviceInfo": deviceInfo,
+          });
+
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(LoginManager.instance.currentUserId)
+          .set({
+            "userId": LoginManager.instance.currentUserId,
+            "phoneNo": LoginManager.instance.currentPhoneNumber,
+            "createdAt": now,
+            "updatedAt": now,
+            "version": packageInfo.version,
+            "buildNumber": packageInfo.buildNumber,
+            "platform": Platform.isAndroid ? "android" : "ios",
+          });
+    }
+  }
+
+  Future<Map<String, dynamic>> getDeviceInfo() async {
+    try {
+      final connectivityResult = await _connectivity.checkConnectivity();
+
+      if (Platform.isAndroid) {
+        final AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
+
+        return {
+          "platform": "android",
+          "deviceId": androidInfo.id,
+          "deviceModel": androidInfo.model,
+          "manufacturer": androidInfo.manufacturer,
+          "osVersion": androidInfo.version.release,
+          "sdkVersion": androidInfo.version.sdkInt,
+          "isPhysicalDevice": androidInfo.isPhysicalDevice,
+          "networkType": connectivityResult.toString(),
+          "timestamp": DateTime.now().toIso8601String(),
+        };
+      } else if (Platform.isIOS) {
+        final IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
+
+        return {
+          "platform": "ios",
+          "deviceId": iosInfo.identifierForVendor,
+          "deviceModel": iosInfo.model,
+          "osVersion": iosInfo.systemVersion,
+          "isPhysicalDevice": iosInfo.isPhysicalDevice,
+          "networkType": connectivityResult.toString(),
+          "timestamp": DateTime.now().toIso8601String(),
+        };
+      }
+    } catch (e) {
+      LoggerService.logError("Error getting device info: $e");
+    }
+    return {};
   }
 
   void resendOTP() {
     if (!canResendOtp.value) {
-      _showError(
-        "Please wait ${resendCooldown.value} seconds before resending",
-      );
       return;
     }
-    _showError(""); // Clear previous errors
-    otp.value = ""; // Clear OTP field
+    _showError("");
+    otp.value = "";
     sendOTP();
   }
 
@@ -395,19 +280,19 @@ class LoginController extends GetxController {
     canResendOtp.value = false;
     resendCooldown.value = 30;
 
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
+    _resendTimer?.cancel();
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       resendCooldown.value--;
 
       if (resendCooldown.value <= 0) {
         canResendOtp.value = true;
-        return false;
+        timer.cancel();
       }
-      return true;
     });
   }
 
   void goBackToPhoneInput() {
+    _resendTimer?.cancel();
     isOtpSent.value = false;
     otp.value = "";
     _showError("");
@@ -415,5 +300,6 @@ class LoginController extends GetxController {
     resendCooldown.value = 0;
     canResendOtp.value = true;
     isSendingOtp.value = false;
+    agreeToTerms.value = false;
   }
 }

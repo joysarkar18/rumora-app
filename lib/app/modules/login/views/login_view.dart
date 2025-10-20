@@ -141,33 +141,23 @@ class LoginView extends GetView<LoginController> {
 
           SizedBox(height: 1.5.h),
 
-          CommonButton(
-            text: controller.isSendingOtp.value ? "Sending OTP..." : "Get OTP",
-            onPressed: controller.isSendingOtp.value
-                ? null
-                : () {
-                    if (controller.agreeToTerms.value) {
-                      if (controller.isValidPhoneNumber) {
-                        controller.sendOTP();
-                      } else {
-                        Get.snackbar(
-                          'Invalid Phone',
-                          'Please enter a valid 10-digit phone number',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: AppColors.darkRed,
-                          colorText: Colors.white,
-                        );
-                      }
-                    } else {
-                      Get.snackbar(
-                        'Required',
-                        'Please agree to Terms & Conditions and Privacy Policy',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.darkRed,
-                        colorText: Colors.white,
-                      );
+          // Get OTP Button - Disabled until valid phone number and terms agreed
+          Obx(
+            () => CommonButton(
+              text: controller.isSendingOtp.value
+                  ? "Sending OTP..."
+                  : "Get OTP",
+              enabled:
+                  controller.isValidPhoneNumber &&
+                  controller.agreeToTerms.value &&
+                  !controller.isSendingOtp.value,
+              onPressed:
+                  controller.isValidPhoneNumber && controller.agreeToTerms.value
+                  ? () {
+                      controller.sendOTP();
                     }
-                  },
+                  : null,
+            ),
           ),
 
           SizedBox(height: 1.h),
@@ -267,7 +257,7 @@ class LoginView extends GetView<LoginController> {
           // OTP Input Field
           Center(
             child: Pinput(
-              length: 4,
+              length: 6,
               onChanged: (value) {
                 controller.otp.value = value;
               },
@@ -329,37 +319,52 @@ class LoginView extends GetView<LoginController> {
 
           const Spacer(),
 
-          // Resend OTP section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Didn't receive the code? ",
-                style: AppTextStyles.style14w400(color: AppColors.grayBlue),
-              ),
-              GestureDetector(
-                onTap: () {
-                  controller.resendOTP();
-                },
-                child: Text(
-                  "Resend",
-                  style: AppTextStyles.style14w600(color: AppColors.primary),
+          // Resend OTP section - Timer and Resend Button
+          Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Didn't receive the code? ",
+                  style: AppTextStyles.style14w400(color: AppColors.grayBlue),
                 ),
-              ),
-            ],
+                if (controller.canResendOtp.value)
+                  GestureDetector(
+                    onTap: () {
+                      controller.resendOTP();
+                    },
+                    child: Text(
+                      "Resend",
+                      style: AppTextStyles.style14w600(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  )
+                else
+                  Text(
+                    "Resend in ${controller.resendCooldown.value}s",
+                    style: AppTextStyles.style14w600(
+                      color: AppColors.grayBlue.withOpacity(0.6),
+                    ),
+                  ),
+              ],
+            ),
           ),
 
           SizedBox(height: 1.5.h),
 
-          // Verify Button
+          // Verify Button - Disabled until valid OTP is entered
           Obx(
             () => CommonButton(
               text: controller.isVerifyingOtp.value ? "Verifying..." : "Verify",
-              onPressed: controller.isVerifyingOtp.value
-                  ? null
-                  : () {
+              enabled:
+                  controller.otp.value.length == 6 &&
+                  !controller.isVerifyingOtp.value,
+              onPressed: controller.otp.value.length == 6
+                  ? () {
                       controller.verifyOTP();
-                    },
+                    }
+                  : null,
             ),
           ),
 
