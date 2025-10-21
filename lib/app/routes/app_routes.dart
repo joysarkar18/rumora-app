@@ -10,6 +10,8 @@ abstract class Routes {
   static const NAVBAR = _Paths.NAVBAR;
   static const COLLEGE = _Paths.COLLEGE;
   static const CHOOSE_GENDER = _Paths.CHOOSE_GENDER;
+  static const CHOOSE_USERNAME = _Paths.CHOOSE_USERNAME;
+  static const PROFILE_COMPLETE = _Paths.PROFILE_COMPLETE;
 }
 
 abstract class _Paths {
@@ -21,4 +23,6 @@ abstract class _Paths {
   static const NAVBAR = '/navbar';
   static const COLLEGE = '/college';
   static const CHOOSE_GENDER = '/choose-gender';
+  static const CHOOSE_USERNAME = '/choose-username';
+  static const PROFILE_COMPLETE = '/profile-complete';
 }

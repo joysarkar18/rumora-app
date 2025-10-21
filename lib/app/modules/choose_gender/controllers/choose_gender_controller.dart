@@ -1,3 +1,4 @@
+import 'package:campus_crush_app/app/routes/app_pages.dart';
 import 'package:campus_crush_app/app/services/login_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -66,21 +67,14 @@ class ChooseGenderController extends GetxController {
       }
 
       // Save to Firestore
-      await _firestore.collection('users').doc(userId).update({
+      await _firestore.collection('user').doc(userId).update({
         'gender': selectedGender.value,
         'dob': selectedDate.value,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      Get.snackbar(
-        'Success',
-        'Profile updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-      );
-
       // Navigate to next screen
-      Get.offNamed('/nextScreenRoute'); // Replace with your route
+      Get.offNamed(Routes.CHOOSE_USERNAME);
     } on FirebaseException catch (e) {
       Get.snackbar(
         'Error',

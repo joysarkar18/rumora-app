@@ -27,7 +27,7 @@ void main() async {
             primaryColor: AppColors.primary,
           ),
           initialRoute: LoginManager.instance.isLoggedIn.value
-              ? Routes.COLLEGE
+              ? Routes.NAVBAR
               : AppPages.initial,
           getPages: AppPages.routes,
         );

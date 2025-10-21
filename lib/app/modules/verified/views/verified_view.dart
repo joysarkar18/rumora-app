@@ -11,6 +11,7 @@ import '../controllers/verified_controller.dart';
 
 class VerifiedView extends GetView<VerifiedController> {
   const VerifiedView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +30,13 @@ class VerifiedView extends GetView<VerifiedController> {
             ),
             SizedBox(height: 0.7.sh),
 
-            Text(
-              "You will be redirected to main page shortly",
-              style: AppTextStyles.style14w600(color: AppColors.offWhite),
+            Obx(
+              () => Text(
+                controller.count.value == 1
+                    ? "You will be redirected to main page shortly"
+                    : "You will be redirected to main page shortly",
+                style: AppTextStyles.style14w600(color: AppColors.offWhite),
+              ),
             ),
           ],
         ),

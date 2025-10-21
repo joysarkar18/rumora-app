@@ -1,3 +1,4 @@
+import 'package:campus_crush_app/app/utils/timestamp_to_date_converter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,15 +10,15 @@ abstract class UserModel with _$UserModel {
   const factory UserModel({
     @Default('') String userId,
     @Default('') String phoneNo,
-    @Default('') String userName,
+    @Default('') String username,
     @Default('') String gender,
-    @Default(null) DateTime? dob,
+    @NullableTimestampConverter() DateTime? dob,
     required College college,
     @Default('') String version,
     @Default('') String buildNumber,
     @Default('') String platform,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    @TimestampConverter() required DateTime createdAt,
+    @TimestampConverter() required DateTime updatedAt,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

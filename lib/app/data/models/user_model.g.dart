@@ -9,30 +9,30 @@ part of 'user_model.dart';
 _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   userId: json['userId'] as String? ?? '',
   phoneNo: json['phoneNo'] as String? ?? '',
-  userName: json['userName'] as String? ?? '',
+  username: json['username'] as String? ?? '',
   gender: json['gender'] as String? ?? '',
-  dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
+  dob: const NullableTimestampConverter().fromJson(json['dob']),
   college: College.fromJson(json['college'] as Map<String, dynamic>),
   version: json['version'] as String? ?? '',
   buildNumber: json['buildNumber'] as String? ?? '',
   platform: json['platform'] as String? ?? '',
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  createdAt: const TimestampConverter().fromJson(json['createdAt']),
+  updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
 );
 
 Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'phoneNo': instance.phoneNo,
-      'userName': instance.userName,
+      'username': instance.username,
       'gender': instance.gender,
-      'dob': instance.dob?.toIso8601String(),
+      'dob': const NullableTimestampConverter().toJson(instance.dob),
       'college': instance.college,
       'version': instance.version,
       'buildNumber': instance.buildNumber,
       'platform': instance.platform,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
     };
 
 _College _$CollegeFromJson(Map<String, dynamic> json) => _College(

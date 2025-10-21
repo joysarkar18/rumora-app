@@ -6,6 +6,10 @@ class Assets {
   /// assets/animations/complete.json
   static const String animationsComplete = "assets/animations/complete.json";
 
+  /// Assets for animationsDice
+  /// assets/animations/dice.json
+  static const String animationsDice = "assets/animations/dice.json";
+
   /// Assets for csvColleges
   /// assets/csv/colleges.csv
   static const String csvColleges = "assets/csv/colleges.csv";
@@ -25,6 +29,10 @@ class Assets {
   /// Assets for iconsOtpSent
   /// assets/icons/otpSent.svg
   static const String iconsOtpSent = "assets/icons/otpSent.svg";
+
+  /// Assets for iconsProfileComplete
+  /// assets/icons/profile_complete.svg
+  static const String iconsProfileComplete = "assets/icons/profile_complete.svg";
 
   /// Assets for iconsWelcome
   /// assets/icons/welcome.svg
