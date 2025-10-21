@@ -12,6 +12,10 @@ abstract class Routes {
   static const CHOOSE_GENDER = _Paths.CHOOSE_GENDER;
   static const CHOOSE_USERNAME = _Paths.CHOOSE_USERNAME;
   static const PROFILE_COMPLETE = _Paths.PROFILE_COMPLETE;
+  static const CHATS = _Paths.CHATS;
+  static const PROFILE = _Paths.PROFILE;
+  static const EXPLORE = _Paths.EXPLORE;
+  static const CRUSH = _Paths.CRUSH;
 }
 
 abstract class _Paths {
@@ -25,4 +29,8 @@ abstract class _Paths {
   static const CHOOSE_GENDER = '/choose-gender';
   static const CHOOSE_USERNAME = '/choose-username';
   static const PROFILE_COMPLETE = '/profile-complete';
+  static const CHATS = '/chats';
+  static const PROFILE = '/profile';
+  static const EXPLORE = '/explore';
+  static const CRUSH = '/crush';
 }
