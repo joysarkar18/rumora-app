@@ -165,8 +165,7 @@ class CollegeController extends GetxController {
 
       LoggerService.logInfo("Updating data of $userId");
 
-      // Check if data is null or empty
-      if (data == null || data.isEmpty) {
+      if (data.isEmpty) {
         LoggerService.logError("College data is null or empty");
         Get.snackbar(
           'Error',

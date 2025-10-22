@@ -68,9 +68,11 @@ class LoginView extends GetView<LoginController> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.withOpacity(0.5)),
+                      border: Border.all(
+                        color: Colors.red.withValues(alpha: 0.5),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -208,7 +210,7 @@ class LoginView extends GetView<LoginController> {
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
               ),
               child: Icon(
                 Icons.keyboard_arrow_left_rounded,
@@ -286,10 +288,10 @@ class LoginView extends GetView<LoginController> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Colors.red.withOpacity(0.5),
+                            color: Colors.red.withValues(alpha: 0.5),
                           ),
                         ),
                         child: Row(
@@ -344,7 +346,7 @@ class LoginView extends GetView<LoginController> {
                   Text(
                     "Resend in ${controller.resendCooldown.value}s",
                     style: AppTextStyles.style14w600(
-                      color: AppColors.grayBlue.withOpacity(0.6),
+                      color: AppColors.grayBlue.withValues(alpha: 0.6),
                     ),
                   ),
               ],

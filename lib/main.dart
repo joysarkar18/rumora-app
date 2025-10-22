@@ -1,5 +1,4 @@
 import 'package:campus_crush_app/app/services/login_manager.dart';
-import 'package:campus_crush_app/app/services/typesence_service.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';

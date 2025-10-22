@@ -16,6 +16,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const EXPLORE = _Paths.EXPLORE;
   static const CRUSH = _Paths.CRUSH;
+  static const ADD_POST = _Paths.ADD_POST;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const EXPLORE = '/explore';
   static const CRUSH = '/crush';
+  static const ADD_POST = '/add-post';
 }

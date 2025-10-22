@@ -34,6 +34,14 @@ class Assets {
   /// assets/icons/college_art.svg
   static const String iconsCollegeArt = "assets/icons/college_art.svg";
 
+  /// Assets for iconsComment
+  /// assets/icons/comment.svg
+  static const String iconsComment = "assets/icons/comment.svg";
+
+  /// Assets for iconsFilter
+  /// assets/icons/filter.svg
+  static const String iconsFilter = "assets/icons/filter.svg";
+
   /// Assets for iconsHeart
   /// assets/icons/heart.svg
   static const String iconsHeart = "assets/icons/heart.svg";
@@ -50,6 +58,14 @@ class Assets {
   /// assets/icons/otpSent.svg
   static const String iconsOtpSent = "assets/icons/otpSent.svg";
 
+  /// Assets for iconsPoop
+  /// assets/icons/poop.svg
+  static const String iconsPoop = "assets/icons/poop.svg";
+
+  /// Assets for iconsPoopFilled
+  /// assets/icons/poop_filled.svg
+  static const String iconsPoopFilled = "assets/icons/poop_filled.svg";
+
   /// Assets for iconsProfile
   /// assets/icons/profile.svg
   static const String iconsProfile = "assets/icons/profile.svg";
@@ -61,6 +77,10 @@ class Assets {
   /// Assets for iconsSearch
   /// assets/icons/search.svg
   static const String iconsSearch = "assets/icons/search.svg";
+
+  /// Assets for iconsStats
+  /// assets/icons/stats.svg
+  static const String iconsStats = "assets/icons/stats.svg";
 
   /// Assets for iconsWelcome
   /// assets/icons/welcome.svg

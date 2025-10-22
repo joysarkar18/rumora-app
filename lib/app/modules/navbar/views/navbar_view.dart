@@ -1,4 +1,3 @@
-import 'package:campus_crush_app/app/modules/home/views/home_view.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/constants/assets.dart';
 import 'package:flutter/material.dart';

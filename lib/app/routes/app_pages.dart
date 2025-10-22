@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/add_post/bindings/add_post_binding.dart';
+import '../modules/add_post/views/add_post_view.dart';
 import '../modules/chats/bindings/chats_binding.dart';
 import '../modules/chats/views/chats_view.dart';
 import '../modules/choose_college/bindings/college_binding.dart';
@@ -101,6 +103,11 @@ class AppPages {
       name: _Paths.CRUSH,
       page: () => const CrushView(),
       binding: CrushBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_POST,
+      page: () => const AddPostView(),
+      binding: AddPostBinding(),
     ),
   ];
 }
