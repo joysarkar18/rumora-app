@@ -11,7 +11,6 @@ class UserController extends GetxController {
   final isLoading = false.obs;
   @override
   void onInit() {
-    fetchUser();
     super.onInit();
   }
 

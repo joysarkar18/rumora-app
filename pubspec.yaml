@@ -58,6 +58,7 @@ dependencies:
   firebase_storage: ^13.0.3
   image: ^4.5.4
   crop_your_image: ^2.0.0
+  get_time_ago: ^2.3.2
 
 
 dev_dependencies:

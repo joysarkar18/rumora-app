@@ -8,13 +8,6 @@ import 'package:get/get.dart';
 
 class NavbarController extends GetxController {
   final selectedIndex = 0.obs;
-  final List<Widget> pages = [
-    HomeView(),
-    CrushView(),
-    ExploreView(),
-    ChatsView(),
-    ProfileView(),
-  ];
 
   void onItemTapped(int index) {
     selectedIndex.value = index;

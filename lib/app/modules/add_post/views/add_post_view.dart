@@ -43,9 +43,11 @@ class AddPostView extends GetView<AddPostController> {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0.5,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new, size: 18),
-        onPressed: () => Get.back(),
+      leading: Obx(
+        () => IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, size: 18),
+          onPressed: controller.isLoading.value ? null : () => Get.back(),
+        ),
       ),
       title: Text(
         'Create Post',
@@ -90,36 +92,42 @@ class AddPostView extends GetView<AddPostController> {
               ),
             ],
           ),
-          child: TextField(
-            controller: controller.textController,
-            maxLines: 8,
-            maxLength: 500,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              hintText: 'Share something interesting...',
-              hintStyle: AppTextStyles.style14w400(
-                color: AppColors.grayBlue.withValues(alpha: 0.4),
+          child: Obx(
+            () => TextField(
+              controller: controller.textController,
+              enabled: !controller.isLoading.value,
+              maxLines: 8,
+              maxLength: 500,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                hintText: 'Share something interesting...',
+                hintStyle: AppTextStyles.style14w400(
+                  color: AppColors.grayBlue.withValues(alpha: 0.4),
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(4.w),
+                counter: Obx(() {
+                  final count = controller.textLength.value;
+                  Color textColor;
+                  if (count > 450) {
+                    textColor = Colors.red;
+                  } else if (count > 350) {
+                    textColor = Colors.orange;
+                  } else {
+                    textColor = AppColors.primary.withValues(alpha: 0.8);
+                  }
+                  return Text(
+                    '$count/500',
+                    style: AppTextStyles.style12w600(
+                      color: textColor,
+                      height: 3,
+                    ),
+                  );
+                }),
               ),
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(4.w),
-              counter: Obx(() {
-                final count = controller.textLength.value;
-                Color textColor;
-                if (count > 450) {
-                  textColor = Colors.red;
-                } else if (count > 350) {
-                  textColor = Colors.orange;
-                } else {
-                  textColor = AppColors.primary.withValues(alpha: 0.8);
-                }
-                return Text(
-                  '$count/500',
-                  style: AppTextStyles.style12w600(color: textColor, height: 3),
-                );
-              }),
+              style: AppTextStyles.style14w500(color: AppColors.grayBlue),
+              onChanged: (value) => controller.updateTextLength(),
             ),
-            style: AppTextStyles.style14w500(color: AppColors.grayBlue),
-            onChanged: (value) => controller.updateTextLength(),
           ),
         ),
       ],
@@ -186,7 +194,9 @@ class AddPostView extends GetView<AddPostController> {
                 File imageFile = entry.value;
                 return _buildSquareImagePreviewItem(imageFile, index);
               }).toList(),
-              if (controller.selectedImages.length < 5) _buildAddImageButton(),
+              if (controller.selectedImages.length < 5 &&
+                  !controller.isLoading.value)
+                _buildAddImageButton(),
             ],
           ),
         ),
@@ -242,31 +252,35 @@ class AddPostView extends GetView<AddPostController> {
               ),
             ),
           ),
-          Positioned(
-            top: -10,
-            right: -10,
-            child: GestureDetector(
-              onTap: () => controller.removeImage(index),
-              child: Container(
-                height: 28,
-                width: 28,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.red.withValues(alpha: 0.3),
-                      blurRadius: 6,
+          Obx(
+            () => controller.isLoading.value
+                ? const SizedBox.shrink()
+                : Positioned(
+                    top: -10,
+                    right: -10,
+                    child: GestureDetector(
+                      onTap: () => controller.removeImage(index),
+                      child: Container(
+                        height: 28,
+                        width: 28,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withValues(alpha: 0.3),
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.close_rounded,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ),
-            ),
+                  ),
           ),
         ],
       ),
@@ -339,12 +353,18 @@ class AddPostView extends GetView<AddPostController> {
                         color: AppColors.grayBlue,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Icon(
-                        Icons.close,
-                        color: AppColors.grayBlue,
-                        size: 24,
+                    Obx(
+                      () => GestureDetector(
+                        onTap: controller.isLoading.value
+                            ? null
+                            : () => Get.back(),
+                        child: Icon(
+                          Icons.close,
+                          color: controller.isLoading.value
+                              ? AppColors.grayBlue.withValues(alpha: 0.3)
+                              : AppColors.grayBlue,
+                          size: 24,
+                        ),
                       ),
                     ),
                   ],
@@ -353,27 +373,36 @@ class AddPostView extends GetView<AddPostController> {
               Divider(height: 1, thickness: 1),
               // Preview content using PostCard widget with file images
               Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: _buildPostCardPreview(),
+                child: Obx(
+                  () => SingleChildScrollView(
+                    controller: scrollController,
+                    physics: controller.isLoading.value
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: _buildPostCardPreview(),
+                    ),
                   ),
                 ),
               ),
               // Post Button at bottom
               Padding(
                 padding: EdgeInsets.all(16),
-                child: CommonButton(
-                  text: 'Post Now',
-                  onPressed: () => _confirmAndPost(),
-                  isLoading: controller.isLoading.value,
-                  loadingWidget: const SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2.8,
+                child: Obx(
+                  () => CommonButton(
+                    text: 'Post Now',
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => _confirmAndPost(),
+                    isLoading: controller.isLoading.value,
+                    loadingWidget: const SizedBox(
+                      height: 22,
+                      width: 22,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.8,
+                      ),
                     ),
                   ),
                 ),
@@ -400,7 +429,6 @@ class AddPostView extends GetView<AddPostController> {
   }
 
   void _confirmAndPost() {
-    Get.back(); // Close preview
     controller.createPost();
   }
 }

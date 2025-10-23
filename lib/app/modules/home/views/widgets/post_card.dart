@@ -1,37 +1,18 @@
 import 'package:avatar_plus/avatar_plus.dart';
 import 'package:campus_crush_app/app/common/widgets/common_image_view.dart';
+import 'package:campus_crush_app/app/data/models/post_model.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/app/utils/text_styles.dart';
 import 'package:campus_crush_app/constants/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PostCard extends StatefulWidget {
-  final String username;
-  final String university;
-  final String timeAgo;
-  final String postContent;
-  final int likes;
-  final int comments;
-  final int poops;
-  final List<String> imageUrls;
+  final PostModel post;
 
-  const PostCard({
-    super.key,
-    this.username = "GubbyDubbys23",
-    this.university = "Maulana Abul Kalam Azad University of Technology",
-    this.timeAgo = "2 min ago",
-    this.postContent =
-        "This is something I wanna post on this community. Let's connect and make friends!",
-    this.likes = 65,
-    this.comments = 5,
-    this.poops = 15,
-    this.imageUrls = const [
-      "https://images.pexels.com/photos/4017827/pexels-photo-4017827.jpeg?cs=srgb&dl=pexels-muaz-aj-1782491-4017827.jpg&fm=jpg",
-      "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3V0ZSUyMGNhdHxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000",
-    ],
-  });
+  const PostCard({super.key, required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -88,14 +69,14 @@ class _PostCardState extends State<PostCard> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              widget.username,
+                              widget.post.username,
                               style: AppTextStyles.style14w500(
                                 color: AppColors.grayBlue,
                               ),
                             ),
                             SizedBox(height: 2),
                             Text(
-                              widget.university,
+                              widget.post.college.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.style12w400(
@@ -107,7 +88,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                       SizedBox(width: 10.w),
                       Text(
-                        widget.timeAgo,
+                        GetTimeAgo.parse(widget.post.createdAt),
                         style: AppTextStyles.style12w600(
                           color: AppColors.primary,
                         ),
@@ -129,15 +110,15 @@ class _PostCardState extends State<PostCard> {
                         Padding(
                           padding: EdgeInsets.all(12),
                           child: Text(
-                            widget.postContent,
+                            widget.post.postContent,
                             style: AppTextStyles.style14w500(
                               color: AppColors.grayBlue,
                             ),
                           ),
                         ),
                         // Images carousel
-                        if (widget.imageUrls.isNotEmpty)
-                          _buildImagesCarousel(widget.imageUrls),
+                        if (widget.post.imageUrls.isNotEmpty)
+                          _buildImagesCarousel(widget.post.imageUrls),
                       ],
                     ),
                   ),
@@ -154,14 +135,14 @@ class _PostCardState extends State<PostCard> {
                   Icon(Icons.favorite_border_rounded),
                   SizedBox(width: 4),
                   Text(
-                    "${widget.likes}",
+                    "${widget.post.likes}",
                     style: AppTextStyles.style15w700(color: AppColors.primary),
                   ),
                   SizedBox(width: 16),
                   SvgPicture.asset(Assets.iconsComment, height: 21),
                   SizedBox(width: 4),
                   Text(
-                    "${widget.comments}",
+                    "${widget.post.comments}",
                     style: AppTextStyles.style15w700(color: AppColors.primary),
                   ),
                   SizedBox(width: 16),
@@ -172,7 +153,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    "${widget.poops}",
+                    "${widget.post.poops}",
                     style: AppTextStyles.style15w700(
                       color: AppColors.orangePrimary,
                     ),

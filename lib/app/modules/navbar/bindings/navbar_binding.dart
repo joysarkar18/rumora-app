@@ -7,8 +7,11 @@ import '../controllers/navbar_controller.dart';
 class NavbarBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<NavbarController>(() => NavbarController());
-    Get.lazyPut<HomeController>(() => HomeController());
-    Get.lazyPut<UserController>(() => UserController());
+    // Navbar controller should always be available
+    Get.put<NavbarController>(NavbarController(), permanent: true);
+
+    // User controller should persist across navigation
+    Get.put<UserController>(UserController(), permanent: true);
+    Get.put<HomeController>(HomeController(), permanent: true);
   }
 }

@@ -1,3 +1,8 @@
+import 'package:campus_crush_app/app/modules/chats/views/chats_view.dart';
+import 'package:campus_crush_app/app/modules/crush/views/crush_view.dart';
+import 'package:campus_crush_app/app/modules/explore/views/explore_view.dart';
+import 'package:campus_crush_app/app/modules/home/views/home_view.dart';
+import 'package:campus_crush_app/app/modules/profile/views/profile_view.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/constants/assets.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +21,15 @@ class NavbarView extends GetView<NavbarController> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      body: Obx(() => controller.pages[controller.selectedIndex.value]),
+      body: Obx(
+        () => [
+          HomeView(),
+          CrushView(),
+          ExploreView(),
+          ChatsView(),
+          ProfileView(),
+        ][controller.selectedIndex.value],
+      ),
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Obx(
@@ -76,8 +89,13 @@ class NavbarView extends GetView<NavbarController> {
     required String label,
     required int index,
   }) {
-    return GestureDetector(
-      onTap: () => controller.onItemTapped(index),
+    return TextButton(
+      style: ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.zero),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
+      ),
+      onPressed: () => controller.onItemTapped(index),
       child: Container(
         width: 18.w,
         padding: const EdgeInsets.all(8.0),

@@ -179,9 +179,9 @@ class AddPostController extends GetxController {
 
       // Create post data
       Map<String, dynamic> postData = {
-        'userId': LoginManager.instance.bypassUserId,
+        'userId': LoginManager.instance.currentUserId,
         'username': userController.user.value!.username,
-        'phoneNo': LoginManager.instance.phoneNumber,
+        'phoneNo': LoginManager.instance.phoneNumber.value,
         'college': userController.user.value!.college.toJson(),
         'postContent': textController.text.trim(),
         'imageUrls': imageUrls,
@@ -206,20 +206,12 @@ class AddPostController extends GetxController {
         }
       }
 
-      // Show success message
-      Get.snackbar(
-        'Success',
-        'Post created successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2),
-      );
-
       // Reset form
       textController.clear();
       selectedImages.clear();
       textLength.value = 0;
 
-      // Navigate back
+      Get.back();
       Get.back();
     } catch (e) {
       LoggerService.logError(e.toString());

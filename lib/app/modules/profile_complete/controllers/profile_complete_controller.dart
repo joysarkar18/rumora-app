@@ -14,9 +14,10 @@ class ProfileCompleteController extends GetxController {
     _scheduleNavigation();
   }
 
-  void _scheduleNavigation() {
-    Get.offAllNamed(Routes.NAVBAR);
-    Future.delayed(const Duration(seconds: 1), () {});
+  void _scheduleNavigation() async {
+    await Future.delayed(const Duration(seconds: 2), () {
+      Get.offAllNamed(Routes.NAVBAR);
+    });
   }
 
   @override
