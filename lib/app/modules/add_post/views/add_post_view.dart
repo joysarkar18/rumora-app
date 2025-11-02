@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:campus_crush_app/app/common/widgets/common_button.dart';
 import 'package:campus_crush_app/app/modules/add_post/views/widgets/file_image_post_card.dart';
+import 'package:campus_crush_app/app/modules/home/controllers/home_controller.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -428,7 +429,9 @@ class AddPostView extends GetView<AddPostController> {
     );
   }
 
-  void _confirmAndPost() {
+  void _confirmAndPost() async {
     controller.createPost();
+    final HomeController homeController = Get.find<HomeController>();
+    await homeController.refreshPosts();
   }
 }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostModel {
 
- College get college; int get comments;@TimestampConverter() DateTime get createdAt;@TimestampConverter() DateTime get updatedAt; String get userId; String get phoneNo; String get username; String get gender; String get postContent; int get poops; List<String> get poopBy; int get likes; List<String> get likedBy; List<String> get imageUrls;
+ College get college; int get comments;@TimestampConverter() DateTime get createdAt;@TimestampConverter() DateTime get updatedAt; String get userId; String get postId; String get phoneNo; String get username; String get gender; String get postContent; int get poops; List<String> get poopBy; int get likes; List<String> get likedBy; List<String> get imageUrls;
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PostModelCopyWith<PostModel> get copyWith => _$PostModelCopyWithImpl<PostModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostModel&&(identical(other.college, college) || other.college == college)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.postContent, postContent) || other.postContent == postContent)&&(identical(other.poops, poops) || other.poops == poops)&&const DeepCollectionEquality().equals(other.poopBy, poopBy)&&(identical(other.likes, likes) || other.likes == likes)&&const DeepCollectionEquality().equals(other.likedBy, likedBy)&&const DeepCollectionEquality().equals(other.imageUrls, imageUrls));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostModel&&(identical(other.college, college) || other.college == college)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.postContent, postContent) || other.postContent == postContent)&&(identical(other.poops, poops) || other.poops == poops)&&const DeepCollectionEquality().equals(other.poopBy, poopBy)&&(identical(other.likes, likes) || other.likes == likes)&&const DeepCollectionEquality().equals(other.likedBy, likedBy)&&const DeepCollectionEquality().equals(other.imageUrls, imageUrls));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,college,comments,createdAt,updatedAt,userId,phoneNo,username,gender,postContent,poops,const DeepCollectionEquality().hash(poopBy),likes,const DeepCollectionEquality().hash(likedBy),const DeepCollectionEquality().hash(imageUrls));
+int get hashCode => Object.hash(runtimeType,college,comments,createdAt,updatedAt,userId,postId,phoneNo,username,gender,postContent,poops,const DeepCollectionEquality().hash(poopBy),likes,const DeepCollectionEquality().hash(likedBy),const DeepCollectionEquality().hash(imageUrls));
 
 @override
 String toString() {
-  return 'PostModel(college: $college, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, postContent: $postContent, poops: $poops, poopBy: $poopBy, likes: $likes, likedBy: $likedBy, imageUrls: $imageUrls)';
+  return 'PostModel(college: $college, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, postId: $postId, phoneNo: $phoneNo, username: $username, gender: $gender, postContent: $postContent, poops: $poops, poopBy: $poopBy, likes: $likes, likedBy: $likedBy, imageUrls: $imageUrls)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PostModelCopyWith<$Res>  {
   factory $PostModelCopyWith(PostModel value, $Res Function(PostModel) _then) = _$PostModelCopyWithImpl;
 @useResult
 $Res call({
- College college, int comments,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt, String userId, String phoneNo, String username, String gender, String postContent, int poops, List<String> poopBy, int likes, List<String> likedBy, List<String> imageUrls
+ College college, int comments,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt, String userId, String postId, String phoneNo, String username, String gender, String postContent, int poops, List<String> poopBy, int likes, List<String> likedBy, List<String> imageUrls
 });
 
 
@@ -65,13 +65,14 @@ class _$PostModelCopyWithImpl<$Res>
 
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? college = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? postContent = null,Object? poops = null,Object? poopBy = null,Object? likes = null,Object? likedBy = null,Object? imageUrls = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? college = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,Object? userId = null,Object? postId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? postContent = null,Object? poops = null,Object? poopBy = null,Object? likes = null,Object? likedBy = null,Object? imageUrls = null,}) {
   return _then(_self.copyWith(
 college: null == college ? _self.college : college // ignore: cast_nullable_to_non_nullable
 as College,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
 as String,phoneNo: null == phoneNo ? _self.phoneNo : phoneNo // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
@@ -175,10 +176,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String postId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostModel() when $default != null:
-return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
+return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.postId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
   return orElse();
 
 }
@@ -196,10 +197,10 @@ return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String postId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)  $default,) {final _that = this;
 switch (_that) {
 case _PostModel():
-return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
+return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.postId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -216,10 +217,10 @@ return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( College college,  int comments, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt,  String userId,  String postId,  String phoneNo,  String username,  String gender,  String postContent,  int poops,  List<String> poopBy,  int likes,  List<String> likedBy,  List<String> imageUrls)?  $default,) {final _that = this;
 switch (_that) {
 case _PostModel() when $default != null:
-return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
+return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_that.userId,_that.postId,_that.phoneNo,_that.username,_that.gender,_that.postContent,_that.poops,_that.poopBy,_that.likes,_that.likedBy,_that.imageUrls);case _:
   return null;
 
 }
@@ -231,7 +232,7 @@ return $default(_that.college,_that.comments,_that.createdAt,_that.updatedAt,_th
 @JsonSerializable()
 
 class _PostModel implements PostModel {
-  const _PostModel({required this.college, this.comments = 0, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, this.userId = '', this.phoneNo = '', this.username = '', this.gender = '', this.postContent = '', this.poops = 0, final  List<String> poopBy = const [], this.likes = 0, final  List<String> likedBy = const [], final  List<String> imageUrls = const []}): _poopBy = poopBy,_likedBy = likedBy,_imageUrls = imageUrls;
+  const _PostModel({required this.college, this.comments = 0, @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt, this.userId = '', this.postId = '', this.phoneNo = '', this.username = '', this.gender = '', this.postContent = '', this.poops = 0, final  List<String> poopBy = const [], this.likes = 0, final  List<String> likedBy = const [], final  List<String> imageUrls = const []}): _poopBy = poopBy,_likedBy = likedBy,_imageUrls = imageUrls;
   factory _PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
 
 @override final  College college;
@@ -239,6 +240,7 @@ class _PostModel implements PostModel {
 @override@TimestampConverter() final  DateTime createdAt;
 @override@TimestampConverter() final  DateTime updatedAt;
 @override@JsonKey() final  String userId;
+@override@JsonKey() final  String postId;
 @override@JsonKey() final  String phoneNo;
 @override@JsonKey() final  String username;
 @override@JsonKey() final  String gender;
@@ -280,16 +282,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostModel&&(identical(other.college, college) || other.college == college)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.postContent, postContent) || other.postContent == postContent)&&(identical(other.poops, poops) || other.poops == poops)&&const DeepCollectionEquality().equals(other._poopBy, _poopBy)&&(identical(other.likes, likes) || other.likes == likes)&&const DeepCollectionEquality().equals(other._likedBy, _likedBy)&&const DeepCollectionEquality().equals(other._imageUrls, _imageUrls));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostModel&&(identical(other.college, college) || other.college == college)&&(identical(other.comments, comments) || other.comments == comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.postContent, postContent) || other.postContent == postContent)&&(identical(other.poops, poops) || other.poops == poops)&&const DeepCollectionEquality().equals(other._poopBy, _poopBy)&&(identical(other.likes, likes) || other.likes == likes)&&const DeepCollectionEquality().equals(other._likedBy, _likedBy)&&const DeepCollectionEquality().equals(other._imageUrls, _imageUrls));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,college,comments,createdAt,updatedAt,userId,phoneNo,username,gender,postContent,poops,const DeepCollectionEquality().hash(_poopBy),likes,const DeepCollectionEquality().hash(_likedBy),const DeepCollectionEquality().hash(_imageUrls));
+int get hashCode => Object.hash(runtimeType,college,comments,createdAt,updatedAt,userId,postId,phoneNo,username,gender,postContent,poops,const DeepCollectionEquality().hash(_poopBy),likes,const DeepCollectionEquality().hash(_likedBy),const DeepCollectionEquality().hash(_imageUrls));
 
 @override
 String toString() {
-  return 'PostModel(college: $college, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, postContent: $postContent, poops: $poops, poopBy: $poopBy, likes: $likes, likedBy: $likedBy, imageUrls: $imageUrls)';
+  return 'PostModel(college: $college, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, postId: $postId, phoneNo: $phoneNo, username: $username, gender: $gender, postContent: $postContent, poops: $poops, poopBy: $poopBy, likes: $likes, likedBy: $likedBy, imageUrls: $imageUrls)';
 }
 
 
@@ -300,7 +302,7 @@ abstract mixin class _$PostModelCopyWith<$Res> implements $PostModelCopyWith<$Re
   factory _$PostModelCopyWith(_PostModel value, $Res Function(_PostModel) _then) = __$PostModelCopyWithImpl;
 @override @useResult
 $Res call({
- College college, int comments,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt, String userId, String phoneNo, String username, String gender, String postContent, int poops, List<String> poopBy, int likes, List<String> likedBy, List<String> imageUrls
+ College college, int comments,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt, String userId, String postId, String phoneNo, String username, String gender, String postContent, int poops, List<String> poopBy, int likes, List<String> likedBy, List<String> imageUrls
 });
 
 
@@ -317,13 +319,14 @@ class __$PostModelCopyWithImpl<$Res>
 
 /// Create a copy of PostModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? college = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? postContent = null,Object? poops = null,Object? poopBy = null,Object? likes = null,Object? likedBy = null,Object? imageUrls = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? college = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,Object? userId = null,Object? postId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? postContent = null,Object? poops = null,Object? poopBy = null,Object? likes = null,Object? likedBy = null,Object? imageUrls = null,}) {
   return _then(_PostModel(
 college: null == college ? _self.college : college // ignore: cast_nullable_to_non_nullable
 as College,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
 as String,phoneNo: null == phoneNo ? _self.phoneNo : phoneNo // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,gender: null == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable

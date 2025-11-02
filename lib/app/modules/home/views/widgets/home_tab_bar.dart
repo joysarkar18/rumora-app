@@ -28,11 +28,7 @@ class HomeTabBar extends StatelessWidget {
               onTap: () => controller.selectTab(1),
             ),
             Spacer(),
-            FilterDropdown(
-              selectedFilter: controller.selectedFilter.value,
-              filterOptions: controller.filterOptions,
-              onFilterChanged: (filter) => controller.selectFilter(filter),
-            ),
+            FilterDropdown(controller: controller),
           ],
         ),
       ),

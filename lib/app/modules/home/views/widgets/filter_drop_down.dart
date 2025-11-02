@@ -1,21 +1,16 @@
+import 'package:campus_crush_app/app/modules/home/controllers/home_controller.dart';
 import 'package:campus_crush_app/app/utils/app_colors.dart';
 import 'package:campus_crush_app/app/utils/text_styles.dart';
 import 'package:campus_crush_app/constants/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 /// Filter dropdown widget
 class FilterDropdown extends StatefulWidget {
-  final String selectedFilter;
-  final List<String> filterOptions;
-  final Function(String) onFilterChanged;
+  final HomeController controller;
 
-  const FilterDropdown({
-    required this.selectedFilter,
-    required this.filterOptions,
-    required this.onFilterChanged,
-    super.key,
-  });
+  const FilterDropdown({required this.controller, super.key});
 
   @override
   State<FilterDropdown> createState() => _FilterDropdownState();
@@ -27,52 +22,54 @@ class _FilterDropdownState extends State<FilterDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _toggleDropdown,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset(
-                Assets.iconsFilter,
-                height: 16,
-                width: 16,
-                colorFilter: ColorFilter.mode(
-                  widget.selectedFilter.isEmpty
-                      ? AppColors.grayBlue.withValues(alpha: 0.5)
-                      : AppColors.primary,
-                  BlendMode.srcIn,
+    return Obx(
+      () => GestureDetector(
+        onTap: _toggleDropdown,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  Assets.iconsFilter,
+                  height: 16,
+                  width: 16,
+                  colorFilter: ColorFilter.mode(
+                    widget.controller.selectedFilter.value.isEmpty
+                        ? AppColors.grayBlue.withValues(alpha: 0.5)
+                        : AppColors.primary,
+                    BlendMode.srcIn,
+                  ),
                 ),
-              ),
-              SizedBox(width: 6),
-              AnimatedDefaultTextStyle(
-                duration: Duration(milliseconds: 250),
-                style: AppTextStyles.style14w600(
-                  color: widget.selectedFilter.isEmpty
-                      ? AppColors.grayBlue.withValues(alpha: 0.5)
-                      : AppColors.primary,
+                SizedBox(width: 6),
+                AnimatedDefaultTextStyle(
+                  duration: Duration(milliseconds: 250),
+                  style: AppTextStyles.style14w600(
+                    color: widget.controller.selectedFilter.value.isEmpty
+                        ? AppColors.grayBlue.withValues(alpha: 0.5)
+                        : AppColors.primary,
+                  ),
+                  child: Text(
+                    widget.controller.selectedFilter.value.isEmpty
+                        ? 'Filter'
+                        : widget.controller.selectedFilter.value,
+                  ),
                 ),
-                child: Text(
-                  widget.selectedFilter.isEmpty
-                      ? 'Filter'
-                      : widget.selectedFilter,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 250),
-            height: 3,
-            width: widget.selectedFilter.isEmpty ? 0 : 24,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(2),
+              ],
             ),
-          ),
-        ],
+            SizedBox(height: 6),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 250),
+              height: 3,
+              width: widget.controller.selectedFilter.value.isEmpty ? 0 : 24,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -112,58 +109,61 @@ class _FilterDropdownState extends State<FilterDropdown> {
                 ),
               ],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...widget.filterOptions.map((filter) {
-                  final isSelected = widget.selectedFilter == filter;
-                  return GestureDetector(
-                    onTap: () {
-                      widget.onFilterChanged(filter);
-                      _toggleDropdown();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: AnimatedDefaultTextStyle(
-                        duration: Duration(milliseconds: 200),
-                        style: AppTextStyles.style14w500(
-                          color: isSelected
-                              ? AppColors.primary
-                              : AppColors.grayBlue.withValues(alpha: 0.6),
+            child: Obx(
+              () => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...widget.controller.filterOptions.map((filter) {
+                    final isSelected =
+                        widget.controller.selectedFilter.value == filter;
+                    return GestureDetector(
+                      onTap: () {
+                        widget.controller.selectFilter(filter);
+                        _toggleDropdown();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
                         ),
-                        child: Text(filter),
-                      ),
-                    ),
-                  );
-                }).toList(),
-                if (widget.selectedFilter.isNotEmpty) ...[
-                  Divider(
-                    height: 1,
-                    color: AppColors.grayBlue.withValues(alpha: 0.1),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      widget.onFilterChanged('');
-                      _toggleDropdown();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Text(
-                        'Clear Filter',
-                        style: AppTextStyles.style14w500(
-                          color: AppColors.grayBlue.withValues(alpha: 0.6),
+                        child: AnimatedDefaultTextStyle(
+                          duration: Duration(milliseconds: 200),
+                          style: AppTextStyles.style14w500(
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.grayBlue.withValues(alpha: 0.6),
+                          ),
+                          child: Text(filter),
                         ),
                       ),
+                    );
+                  }).toList(),
+                  if (widget.controller.selectedFilter.value.isNotEmpty) ...[
+                    Divider(
+                      height: 1,
+                      color: AppColors.grayBlue.withValues(alpha: 0.1),
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.controller.clearFilter();
+                        _toggleDropdown();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        child: Text(
+                          'Clear Filter',
+                          style: AppTextStyles.style14w500(
+                            color: AppColors.grayBlue.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

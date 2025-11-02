@@ -24,6 +24,7 @@ void main() async {
           theme: ThemeData(
             scaffoldBackgroundColor: AppColors.cream,
             primaryColor: AppColors.primary,
+            primaryColorLight: AppColors.primary,
           ),
           initialRoute: LoginManager.instance.isLoggedIn.value
               ? Routes.NAVBAR

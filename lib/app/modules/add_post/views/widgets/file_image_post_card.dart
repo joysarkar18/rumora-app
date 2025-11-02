@@ -164,7 +164,7 @@ class _FileImagePostCardState extends State<FileImagePostCard> {
                   ),
                   SizedBox(width: 16),
                   SvgPicture.asset(
-                    Assets.iconsPoopFilled,
+                    Assets.iconsPoop,
                     height: 22,
                     color: AppColors.orangePrimary,
                   ),

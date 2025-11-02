@@ -13,6 +13,7 @@ abstract class PostModel with _$PostModel {
     @TimestampConverter() required DateTime createdAt,
     @TimestampConverter() required DateTime updatedAt,
     @Default('') String userId,
+    @Default('') String postId,
     @Default('') String phoneNo,
     @Default('') String username,
     @Default('') String gender,

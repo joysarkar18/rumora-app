@@ -38,6 +38,10 @@ class Assets {
   /// assets/icons/comment.svg
   static const String iconsComment = "assets/icons/comment.svg";
 
+  /// Assets for iconsEdit
+  /// assets/icons/edit.svg
+  static const String iconsEdit = "assets/icons/edit.svg";
+
   /// Assets for iconsFilter
   /// assets/icons/filter.svg
   static const String iconsFilter = "assets/icons/filter.svg";

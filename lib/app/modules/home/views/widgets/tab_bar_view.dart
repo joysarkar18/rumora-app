@@ -19,6 +19,8 @@ class HomeTabBarView extends StatelessWidget {
           initialIndex: controller.selectedTab.value,
           vsync: Scaffold.of(context),
         ),
+        physics:
+            NeverScrollableScrollPhysics(), // Add this line to disable swipe
         children: [
           // New Tab Content
           NewTabContent(controller: controller),
@@ -30,7 +32,6 @@ class HomeTabBarView extends StatelessWidget {
   }
 }
 
-/// New Tab Content Widget
 class NewTabContent extends StatelessWidget {
   final HomeController controller;
 
@@ -39,16 +40,59 @@ class NewTabContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: AppColors.primary,
       onRefresh: () async {
         await controller.getInitData();
       },
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        itemCount: controller.posts.length, // Replace with actual data count
-        itemBuilder: (context, index) {
-          return PostCard(post: controller.posts[index]);
-        },
-      ),
+      child: Obx(() {
+        // Show empty state if no posts
+        if (controller.posts.isEmpty) {
+          return ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.post_add_outlined,
+                        size: 64,
+                        color: AppColors.primary.withOpacity(0.3),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No Posts Yet',
+                        style: AppTextStyles.style18w600(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Be the first to create a post!',
+                        style: AppTextStyles.style14w500(
+                          color: AppColors.primary.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        // Show posts list
+        return ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          itemCount: controller.posts.length,
+          itemBuilder: (context, index) {
+            return PostCard(postIndex: index);
+          },
+        );
+      }),
     );
   }
 }
@@ -61,32 +105,60 @@ class HotTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      itemCount: 8, // Replace with actual data count
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Text(
-              'Hot Item ${index + 1}',
-              style: AppTextStyles.style14w500(color: AppColors.primary),
-            ),
-          ),
-        );
+    return RefreshIndicator(
+      color: AppColors.primary,
+      onRefresh: () async {
+        await controller.getHotPosts();
       },
+      child: Obx(() {
+        // Show empty state if no hot posts
+        if (controller.hotPosts.isEmpty) {
+          return ListView(
+            physics: AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.local_fire_department_outlined,
+                        size: 64,
+                        color: AppColors.primary.withOpacity(0.3),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No Hot Posts Yet',
+                        style: AppTextStyles.style18w600(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Hot posts will appear here!',
+                        style: AppTextStyles.style14w500(
+                          color: AppColors.primary.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        // Show hot posts list
+        return ListView.builder(
+          physics: AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          itemCount: controller.hotPosts.length,
+          itemBuilder: (context, index) {
+            return PostCard(postIndex: index);
+          },
+        );
+      }),
     );
   }
 }

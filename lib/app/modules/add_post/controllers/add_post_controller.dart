@@ -177,8 +177,13 @@ class AddPostController extends GetxController {
         imageUrls = await _uploadImagesToFirebase(selectedImages);
       }
 
-      // Create post data
+      // Generate document reference with ID first
+      DocumentReference docRef = _firebaseFirestore.collection('posts').doc();
+      String postId = docRef.id;
+
+      // Create post data with postId included
       Map<String, dynamic> postData = {
+        'postId': postId,
         'userId': LoginManager.instance.currentUserId,
         'username': userController.user.value!.username,
         'phoneNo': LoginManager.instance.phoneNumber.value,
@@ -192,10 +197,11 @@ class AddPostController extends GetxController {
         'likedBy': [],
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
+        'isHot': false,
       };
 
-      // Add post to Firestore
-      await _firebaseFirestore.collection('posts').add(postData);
+      // Single write operation
+      await docRef.set(postData);
 
       isLoading.value = false;
 
