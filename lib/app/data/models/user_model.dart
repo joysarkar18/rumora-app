@@ -17,6 +17,7 @@ abstract class UserModel with _$UserModel {
     @Default('') String version,
     @Default('') String buildNumber,
     @Default('') String platform,
+    @Default([]) List<String> interests, // Added interests field
     @TimestampConverter() required DateTime createdAt,
     @TimestampConverter() required DateTime updatedAt,
   }) = _UserModel;

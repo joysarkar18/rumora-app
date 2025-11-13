@@ -16,6 +16,9 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   version: json['version'] as String? ?? '',
   buildNumber: json['buildNumber'] as String? ?? '',
   platform: json['platform'] as String? ?? '',
+  interests:
+      (json['interests'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
   createdAt: const TimestampConverter().fromJson(json['createdAt']),
   updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
 );
@@ -31,6 +34,7 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'version': instance.version,
       'buildNumber': instance.buildNumber,
       'platform': instance.platform,
+      'interests': instance.interests,
       'createdAt': const TimestampConverter().toJson(instance.createdAt),
       'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
     };

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 class UserController extends GetxController {
   final user = Rx<UserModel?>(null);
   final isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -74,5 +75,81 @@ class UserController extends GetxController {
 
   void setUser(UserModel userData) {
     user.value = userData;
+  }
+
+  /// Update user interests in Firebase
+  /// Returns true if successful, false otherwise
+  Future<bool> updateUserInterests(List<String> interests) async {
+    try {
+      isLoading.value = true;
+
+      // Validate that user is logged in
+      if (LoginManager.instance.currentUserId.isEmpty) {
+        isLoading.value = false;
+        Get.snackbar(
+          'Error',
+          'User not logged in!',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return false;
+      }
+
+      // Validate user exists
+      if (user.value == null) {
+        isLoading.value = false;
+        Get.snackbar(
+          'Error',
+          'User data not found!',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return false;
+      }
+
+      // Update interests in Firestore
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(LoginManager.instance.currentUserId)
+          .update({
+            'interests': interests,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+
+      // Update local user model immediately using Freezed's copyWith
+      user.value = user.value!.copyWith(
+        interests: interests,
+        updatedAt: DateTime.now(), // Update timestamp locally
+      );
+
+      LoggerService.logInfo("Interests updated successfully");
+
+      // Set loading to false BEFORE returning
+      isLoading.value = false;
+
+      return true; // Success - let the UI handle navigation and showing snackbar
+    } on FirebaseException catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Firebase error: ${e.message ?? "Failed to update interests"}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred: ${e.toString()}',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    }
   }
 }

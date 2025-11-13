@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
- String get userId; String get phoneNo; String get username; String get gender;@NullableTimestampConverter() DateTime? get dob; College get college; String get version; String get buildNumber; String get platform;@TimestampConverter() DateTime get createdAt;@TimestampConverter() DateTime get updatedAt;
+ String get userId; String get phoneNo; String get username; String get gender;@NullableTimestampConverter() DateTime? get dob; College get college; String get version; String get buildNumber; String get platform; List<String> get interests;// Added interests field
+@TimestampConverter() DateTime get createdAt;@TimestampConverter() DateTime get updatedAt;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.college, college) || other.college == college)&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.college, college) || other.college == college)&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.platform, platform) || other.platform == platform)&&const DeepCollectionEquality().equals(other.interests, interests)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,phoneNo,username,gender,dob,college,version,buildNumber,platform,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,userId,phoneNo,username,gender,dob,college,version,buildNumber,platform,const DeepCollectionEquality().hash(interests),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserModel(userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, dob: $dob, college: $college, version: $version, buildNumber: $buildNumber, platform: $platform, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserModel(userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, dob: $dob, college: $college, version: $version, buildNumber: $buildNumber, platform: $platform, interests: $interests, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- String userId, String phoneNo, String username, String gender,@NullableTimestampConverter() DateTime? dob, College college, String version, String buildNumber, String platform,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt
+ String userId, String phoneNo, String username, String gender,@NullableTimestampConverter() DateTime? dob, College college, String version, String buildNumber, String platform, List<String> interests,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt
 });
 
 
@@ -65,7 +66,7 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? dob = freezed,Object? college = null,Object? version = null,Object? buildNumber = null,Object? platform = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? dob = freezed,Object? college = null,Object? version = null,Object? buildNumber = null,Object? platform = null,Object? interests = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,phoneNo: null == phoneNo ? _self.phoneNo : phoneNo // ignore: cast_nullable_to_non_nullable
@@ -76,7 +77,8 @@ as DateTime?,college: null == college ? _self.college : college // ignore: cast_
 as College,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,buildNumber: null == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,interests: null == interests ? _self.interests : interests // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -172,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform,  List<String> interests, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.interests,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -193,10 +195,10 @@ return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform,  List<String> interests, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.interests,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +215,10 @@ return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String phoneNo,  String username,  String gender, @NullableTimestampConverter()  DateTime? dob,  College college,  String version,  String buildNumber,  String platform,  List<String> interests, @TimestampConverter()  DateTime createdAt, @TimestampConverter()  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob,_that.college,_that.version,_that.buildNumber,_that.platform,_that.interests,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -228,7 +230,7 @@ return $default(_that.userId,_that.phoneNo,_that.username,_that.gender,_that.dob
 @JsonSerializable()
 
 class _UserModel implements UserModel {
-  const _UserModel({this.userId = '', this.phoneNo = '', this.username = '', this.gender = '', @NullableTimestampConverter() this.dob, required this.college, this.version = '', this.buildNumber = '', this.platform = '', @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt});
+  const _UserModel({this.userId = '', this.phoneNo = '', this.username = '', this.gender = '', @NullableTimestampConverter() this.dob, required this.college, this.version = '', this.buildNumber = '', this.platform = '', final  List<String> interests = const [], @TimestampConverter() required this.createdAt, @TimestampConverter() required this.updatedAt}): _interests = interests;
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override@JsonKey() final  String userId;
@@ -240,6 +242,14 @@ class _UserModel implements UserModel {
 @override@JsonKey() final  String version;
 @override@JsonKey() final  String buildNumber;
 @override@JsonKey() final  String platform;
+ final  List<String> _interests;
+@override@JsonKey() List<String> get interests {
+  if (_interests is EqualUnmodifiableListView) return _interests;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_interests);
+}
+
+// Added interests field
 @override@TimestampConverter() final  DateTime createdAt;
 @override@TimestampConverter() final  DateTime updatedAt;
 
@@ -256,16 +266,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.college, college) || other.college == college)&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo)&&(identical(other.username, username) || other.username == username)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.college, college) || other.college == college)&&(identical(other.version, version) || other.version == version)&&(identical(other.buildNumber, buildNumber) || other.buildNumber == buildNumber)&&(identical(other.platform, platform) || other.platform == platform)&&const DeepCollectionEquality().equals(other._interests, _interests)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,phoneNo,username,gender,dob,college,version,buildNumber,platform,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,userId,phoneNo,username,gender,dob,college,version,buildNumber,platform,const DeepCollectionEquality().hash(_interests),createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'UserModel(userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, dob: $dob, college: $college, version: $version, buildNumber: $buildNumber, platform: $platform, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'UserModel(userId: $userId, phoneNo: $phoneNo, username: $username, gender: $gender, dob: $dob, college: $college, version: $version, buildNumber: $buildNumber, platform: $platform, interests: $interests, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -276,7 +286,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, String phoneNo, String username, String gender,@NullableTimestampConverter() DateTime? dob, College college, String version, String buildNumber, String platform,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt
+ String userId, String phoneNo, String username, String gender,@NullableTimestampConverter() DateTime? dob, College college, String version, String buildNumber, String platform, List<String> interests,@TimestampConverter() DateTime createdAt,@TimestampConverter() DateTime updatedAt
 });
 
 
@@ -293,7 +303,7 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? dob = freezed,Object? college = null,Object? version = null,Object? buildNumber = null,Object? platform = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? phoneNo = null,Object? username = null,Object? gender = null,Object? dob = freezed,Object? college = null,Object? version = null,Object? buildNumber = null,Object? platform = null,Object? interests = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_UserModel(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,phoneNo: null == phoneNo ? _self.phoneNo : phoneNo // ignore: cast_nullable_to_non_nullable
@@ -304,7 +314,8 @@ as DateTime?,college: null == college ? _self.college : college // ignore: cast_
 as College,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,buildNumber: null == buildNumber ? _self.buildNumber : buildNumber // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,interests: null == interests ? _self._interests : interests // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
